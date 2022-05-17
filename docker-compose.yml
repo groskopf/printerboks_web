@@ -3,7 +3,7 @@ version: "2"
 services:
   nginx:
     build: ./nginx
-    image: evgeniy-khyst/nginx
+    image: ghcr.io/groskopf/printerboks_nginx
     env_file:
       - ./config.env
     volumes:
@@ -19,7 +19,7 @@ services:
 
   certbot:
     build: ./certbot
-    image: evgeniy-khyst/certbot
+    image: ghcr.io/groskopf/printerboks_certbot
     env_file:
       - ./config.env
     volumes:
@@ -30,7 +30,7 @@ services:
 
   cron:
     build: ./cron
-    image: evgeniy-khyst/cron
+    image: ghcr.io/groskopf/printerboks_certbot_ron
     environment:
       COMPOSE_PROJECT_NAME: "${COMPOSE_PROJECT_NAME}"
     volumes:
