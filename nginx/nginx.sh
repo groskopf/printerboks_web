@@ -40,10 +40,8 @@ if [ ! -f /etc/nginx/ssl/ssl-dhparams.pem ]; then
 fi
 
 for domain in $DOMAINS; do
-  if [ ! -f "/etc/nginx/sites/$domain.conf" ]; then
-    echo "Creating Nginx configuration file /etc/nginx/sites/$domain.conf"
-    sed "s/\${domain}/$domain/g" /customization/site.conf.tpl > "/etc/nginx/sites/$domain.conf"
-  fi
+  echo "Creating Nginx configuration file /etc/nginx/sites/$domain.conf"
+  sed "s/\${domain}/$domain/g" /customization/site.conf.tpl > "/etc/nginx/sites/$domain.conf"
 
   if [ ! -f "/etc/nginx/ssl/dummy/$domain/fullchain.pem" ]; then
     echo "Generating dummy ceritificate for $domain"
