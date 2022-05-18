@@ -2,9 +2,6 @@ upstream api_server {
     # fail_timeout=0 means we always retry an upstream even if it failed
     # to return a good HTTP response
 
-    # for UNIX domain socket setups
-    #server unix:/tmp/gunicorn.sock fail_timeout=0;
-
     # for a TCP configuration
     server api:8000 fail_timeout=0;
 }
@@ -36,13 +33,14 @@ server {
 
     include /etc/nginx/hsts.conf;
 
-    location / {
+    location /api/v1 {
       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
       proxy_set_header X-Forwarded-Proto $scheme;
       proxy_set_header Host $http_host;
       # we don't want nginx trying to do something clever with
       # redirects, we set the Host: header above already.
       proxy_redirect off;
+      rewrite ^/api/v1/(.*)$ /$1 break;
       proxy_pass http://api_server;
     }
 }
