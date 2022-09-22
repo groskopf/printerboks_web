@@ -45,6 +45,7 @@ server {
         proxy_redirect off;
         rewrite ^/api/v1/(.*)$ /$1 break;
         proxy_pass http://api_server;
+        proxy_pass_request_headers on;
 
         # WebSocket support
         proxy_http_version 1.1;
