@@ -30,7 +30,7 @@ services:
 
   cron:
     build: ./cron
-    image: ghcr.io/groskopf/printerboks_certbot_ron
+    image: ghcr.io/groskopf/printerboks_certbot_cron
     environment:
       COMPOSE_PROJECT_NAME: "${COMPOSE_PROJECT_NAME}"
     volumes:
