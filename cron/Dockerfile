@@ -13,4 +13,5 @@ RUN chmod +x /etc/periodic/daily/renew_certs
 
 WORKDIR /workdir
 
-CMD ["crond", "-f", "-l", "0"]
+CMD ["crond", "-f", "-d", "0", "-c", "/etc/crontabs/"]
+
