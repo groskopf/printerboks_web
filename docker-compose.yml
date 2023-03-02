@@ -3,7 +3,7 @@ version: "2"
 services:
   nginx:
     build: ./nginx
-    image: ghcr.io/groskopf/printerboks_nginx
+    image: ghcr.io/groskopf/printerboks_nginx:1.1
     env_file:
       - ./config.env
     volumes:
@@ -19,7 +19,7 @@ services:
 
   certbot:
     build: ./certbot
-    image: ghcr.io/groskopf/printerboks_certbot
+    image: ghcr.io/groskopf/printerboks_certbot:1.1
     env_file:
       - ./config.env
     volumes:
@@ -30,9 +30,7 @@ services:
 
   cron:
     build: ./cron
-    image: ghcr.io/groskopf/printerboks_certbot_cron
-    environment:
-      COMPOSE_PROJECT_NAME: "${COMPOSE_PROJECT_NAME}"
+    image: ghcr.io/groskopf/printerboks_certbot_cron:1.1
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./:/workdir:ro
