@@ -33,12 +33,15 @@ server {
 
     include /etc/nginx/hsts.conf;
 
+    underscores_in_headers on; 
+
     location /api/v1 {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_set_header Host $http_host;
         # we don't want nginx trying to do something clever with
         # redirects, we set the Host: header above already.
+	proxy_pass_request_headers on;
         proxy_redirect off;
         rewrite ^/api/v1/(.*)$ /$1 break;
         proxy_pass http://api_server;

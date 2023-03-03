@@ -3,7 +3,7 @@ version: "2"
 services:
   nginx:
     build: ./nginx
-    image: ghcr.io/groskopf/printerboks_nginx:1.1
+    image: ghcr.io/groskopf/printerboks_nginx:1.2
     env_file:
       - ./config.env
     volumes:
