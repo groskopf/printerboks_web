@@ -30,9 +30,7 @@ services:
 
   cron:
     build: ./cron
-    image: ghcr.io/groskopf/printerboks_certbot_cron:1.6
-    environment:
-      COMPOSE_PROJECT_NAME: ${COMPOSE_PROJECT_NAME:?Set COMPOSE_PROJECT_NAME to the existing deployment project name}
+    image: ghcr.io/groskopf/printerboks_certbot_cron:1.7
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./:/workdir:ro
