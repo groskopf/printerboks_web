@@ -30,13 +30,14 @@ services:
 
   cron:
     build: ./cron
-    image: ghcr.io/groskopf/printerboks_certbot_cron:1.5
+    image: ghcr.io/groskopf/printerboks_certbot_cron:1.7
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./:/workdir:ro
     depends_on:
       - nginx
       - certbot
+    restart: always
 
 volumes:
   nginx_conf:

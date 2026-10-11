@@ -49,6 +49,49 @@ The sequence of actions:
 2. Certbot waits for Nginx to become ready and obtains certificates
 3. Cron triggers Certbot to try to renew certificates and Nginx to reload configuration on a daily basis
 
+### Automatic renewal project configuration
+
+The [renewal script](cron/renew_certs.sh) explicitly targets the existing
+`printerbox_backend` Compose project. This cron image is deployment-specific:
+it does not require a project-name environment variable in the running container.
+For another deployment, change the script's project name and rebuild the image.
+Do not change an existing deployment's project name: doing so would select
+different containers and project-scoped volumes.
+
+The renewal script is built into the cron image. After updating the Compose
+configuration and script, rebuild and recreate only cron from the live backend
+deployment directory:
+
+```bash
+docker-compose -p printerbox_backend up -d --no-deps --build cron
+```
+
+If images are built and published separately, update the live backend Compose
+file to use `ghcr.io/groskopf/printerboks_certbot_cron:1.7`, pull cron, and recreate
+it with `up -d --no-deps cron` instead of rebuilding. Keep the existing Docker
+socket and deployment-directory mounts and set `restart: always`.
+
+No full-stack restart is needed. Cron stops the renewal job on errors and
+validates Nginx configuration before reloading it. The image uses Alpine 3.23's
+packaged Docker CLI and Compose plugin (`docker compose`), without Python/pip.
+The host can still use legacy `docker-compose` to manage the stack.
+
+Verify renewal from the live deployment directory:
+
+```bash
+docker-compose -p printerbox_backend exec -T cron \
+  docker compose -p printerbox_backend ps -a
+docker-compose -p printerbox_backend exec -T cron \
+  docker compose -p printerbox_backend run --rm --no-deps -T \
+  --entrypoint certbot certbot renew --dry-run --no-random-sleep-on-renew
+docker-compose -p printerbox_backend exec -T cron \
+  /etc/periodic/daily/renew_certs
+```
+
+The dry-run must report successful simulated renewals. The actual script must
+exit successfully and validate/reload Nginx; certificates not yet due are normal.
+Check cron's logs after the next daily schedule to confirm automatic execution.
+
 ## <a id="1231369e1218613623e1b520c27ce190"></a>Initial setup
 
 ### <a id="ee68e5b99222bbc29a480fcb0d1d6ee2"></a>Prerequisites
