@@ -49,6 +49,31 @@ The sequence of actions:
 2. Certbot waits for Nginx to become ready and obtains certificates
 3. Cron triggers Certbot to try to renew certificates and Nginx to reload configuration on a daily basis
 
+### Automatic renewal project configuration
+
+Set `COMPOSE_PROJECT_NAME` in [`.env`](.env) to the **existing deployment's**
+Compose project name. Cron receives this value explicitly so that renewal uses
+the same challenge volume and reloads the running Nginx service. Do not change
+an existing deployment's project name: doing so would select different containers
+and project-scoped volumes. When using `-p`, it must match this value.
+
+For the existing `printerbox_backend` deployment:
+
+```properties
+COMPOSE_PROJECT_NAME=printerbox_backend
+```
+
+The renewal script is built into the cron image. After updating the Compose
+configuration and script, rebuild and recreate only cron:
+
+```bash
+docker-compose -p printerbox_backend up -d --no-deps --build cron
+```
+
+Use your existing project name instead if it differs. No full-stack restart is
+needed. Cron stops the renewal job on errors and validates Nginx configuration
+before reloading it.
+
 ## <a id="1231369e1218613623e1b520c27ce190"></a>Initial setup
 
 ### <a id="ee68e5b99222bbc29a480fcb0d1d6ee2"></a>Prerequisites
